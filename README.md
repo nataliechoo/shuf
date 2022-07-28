@@ -9,3 +9,18 @@ Supports the following options with the exact same behavior as GNU's shuf:
   - This also supports zero non-option arguments or a single non-option argument "-" (either of which means read from standard input), or single non-option     arguments other than "-" (which specifies the input file name).
   - This also reports an error when given invalid arguments
 
+       -e, --echo
+	      treat each ARG as an input line
+
+       -i, --input-range=LO-HI
+	      treat each number LO through HI as an input line
+
+       -n, --head-count=COUNT
+	      output at most COUNT lines
+
+       -r, --repeat
+	      output lines can be repeated
+
+       --help display this help and exit
+
+       With no FILE, or when FILE is -, read standard input.
