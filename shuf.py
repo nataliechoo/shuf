@@ -21,9 +21,11 @@ Please see <http://www.gnu.org/licenses/> for a copy of the license.
 $Id: randline.py,v 1.4 2010/04/05 20:04:43 eggert Exp $
 """
 
+# The following was written by natalie choo, to re-implement the shuf command in python. 
+# The original command was created by Paul Eggert and Darrell Benjamin Carbajal
+
 import random, sys
 import argparse
-#import string
 
 class shuf:
     def __init__(self, filename):
@@ -40,13 +42,6 @@ def main():
 
 Output randomly selected lines from FILE."""
 
-    #parser = OptionParser(version=version_msg,
-    #                      usage=usage_msg)
-    #parser.add_option("-n", "--numlines",
-    #                  action="store", dest="numlines", default=1,
-    #                  help="output NUMLINES lines (default 1)")
-    #options, args = parser.parse_args(sys.argv[1:])
-
     parser = argparse.ArgumentParser(prog="shuf")
     
     #echo: takes from stdin, anything separated by whitespace is considered a diff line
@@ -62,42 +57,14 @@ Output randomly selected lines from FILE."""
     #repeat
     parser.add_argument('--repeat', '-r', action='store_true', dest='repeat', help='Repeat output values, that is, select with replacement. With this option the output is not a permutation of the input; instead, each output line is randomly chosen from all the inputs. This option is typically combined with --head-count; if --head-count is not given, shuf repeats indefinitely.')
 
-    #help
-    #parser.add_argument('--help', action='store_true', dest='needhelp', help= 'provides help')
-
-    #take stdin (-)
-    #parser.add_argument('-', action='store_true', dest='takestdin', default= not None, help='reads from stdin')
-
     #work with files
     parser.add_argument('file', action='store', nargs='?')
 
     options = parser.parse_args()
-   # print(options)
 
-    # if someone runs shuf without any options, are their destination variables initialized?
-    # so would these come up as compilation errors?
-    # if they are uninitialized, I should use try instead right?
-    # how can i make hcount work as a flag, but also store value?
-
-           # TF
-           # TT
-           # FT
-           # FF
-
-          # F R
-          # F H
-          # F
-           
-    #file or stdin
-    #if (options.standard is not None):
-     #   if (options.repeat):
-            
     #potential echo inputs
     if options.echo_args is not None:
         lines = options.echo_args
-        #to test
-        #print("echo was used")
-        #print(lines[0])
         if options.irange is not None:
             print("shuf: cannot combine -e and -i options")
             return
@@ -135,7 +102,6 @@ Output randomly selected lines from FILE."""
         
     if options.irange is not None:
         #first dismantle narg
-        #print(options.irange[0][0])
         if (options.file is not None):
             print("extra operand")
             return
@@ -149,9 +115,6 @@ Output randomly selected lines from FILE."""
         b = int(parts[1])
         numbers = list(range(a,b+1))
 
-        #print(a)
-        #print(b)
-        #print(numbers)
         #error catching
         if (options.echo_args is not None):
             print("shuf: cannot combine -e and -i options")
@@ -189,10 +152,8 @@ Output randomly selected lines from FILE."""
         for line in sys.stdin:
             a = line.replace('\n', '')
             inlist.append(a)
-    #print(inlist)
     #basic case
     if (options.hcount is None) and (not options.repeat):
-        #print("hi1")
         for i in range(len(inlist)):
             a = random.choice(inlist)
             print(a)
@@ -200,19 +161,16 @@ Output randomly selected lines from FILE."""
         return
     #with repetition, no hcount: indefinite
     if (options.hcount is None) and (options.repeat):
-        #print("hi2")
         while len(inlist) != 0:
             print(random.choice(inlist))
         return
     #with repetition and hcount
     if (options.hcount is not None) and (options.repeat):
-        #print("hi3")
         for i in range(options.hcount[0]):
             print(random.choice(inlist))
         return
     #with hcount, no repetition
     if (options.hcount is not None) and (not options.repeat):
-        #print("hi4")
         #when there is more hcount than lines
         if (options.hcount[0]) > len(inlist):
             for i in range(len(inlist)):
@@ -226,55 +184,7 @@ Output randomly selected lines from FILE."""
                 print(a)
                 inlist.remove(a)
             return
-    '''
-    # if it is just HC and nothing else except repeat
-    if (options.hcount is not None) and (options.echo_args is None) and (options.irange is None):
-        if (options.file is not None):
-            inlist2 = open(options.file, 'r').read().splitlines()
-            #print(inlist2)
-        else:
-            inlist2 = []
-            for line in sys.stdin:
-                a = line.replace('\n', '')
-                #print(inlist2)
-                inlist2.append(a)
-        #for just basic hc
-        if (not options.repeat):
-            if (options.hcount[0]) > len(inlist2):
-                for i in range(len(inlist2)):
-                    a = random.choice(inlist2)
-                    print(a)
-                    inlist2.remove(a)
-                return
-            else: #when there are more lines than hcount
-                for i in range(options.hcount[0]):
-                    a = random.choice(inlist2)
-                    print(a)
-                    inlist2.remove(a)
-                return
-        #for just hc and rep
-        if (options.repeat):
-            for i in range(options.hcount[0]):
-                a = random.choice(inlist2)
-                print(a)
-            return
 
-     #for just repeat by itself
-    if (options.repeat) and (options.hcount is None) and (options.echo_args is None) and (options.irange is None) and (options.file != '-'):
-        if (options.file is not None):
-            inlist3 = open(options.file, 'r').read().splitlines()
-            #print(inlist3)
-        else:
-            inlist3 = []
-            #get input
-            for line in sys.stdin:
-                a = line.replace('\n', '')
-                #print(inlist3)
-                inlist3.append(a)
-        while len(inlist3) != 0:
-            print(random.choice(inlist3))
-        return
-        '''
         
 if __name__ == "__main__":
     main()
